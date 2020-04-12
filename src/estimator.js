@@ -3,7 +3,7 @@ const trunc = (number) => Math.trunc(number);
 const powerOfTwo = (number) => trunc(2 ** number);
 const normaliseDuration = (timeToElapse, periodType) => {
   const timeToElapsed = Number(timeToElapse);
-  let period = Number(timeToElapse);
+  let period;
 
   switch (periodType.toLowerCase()) {
     case 'days':
@@ -20,30 +20,31 @@ const normaliseDuration = (timeToElapse, periodType) => {
       break;
     default:
   }
+
   return trunc(period);
 };
 
-// estimator
 const estimator = (data, mutiplier) => {
   // constant values
   const needICU = 0.05;// estimated % of severe +ve cases that will require ICU care
   const needToRecover = 0.15; // estimated % of severe +ve cases that need hospital to recover
   const bed = 0.35; // % bed available in hospitals for severe COVID-19 positive patients.
   const needVentilator = 0.02; // estimated % of severe positive cases that will require ventilators
-  // data needed
+
   const {
     periodType,
     timeToElapse,
     reportedCases,
     totalHospitalBeds,
     region: { avgDailyIncomeInUSD, avgDailyIncomePopulation }
-  } = data;
+  } = data;// extract variable needed from input object data
 
-  const earnByPeople = avgDailyIncomePopulation; // of the region (the majority) earn $1.5 a day
-  const USDEarn = avgDailyIncomeInUSD; // 65% the region (the majority) earn $1.5 a day
+  const earnByPeople = Number(avgDailyIncomePopulation);
+  const USDEarn = Number(avgDailyIncomeInUSD);
+
   // normalise days,weeks, months and even years into days
   const days = normaliseDuration(timeToElapse, periodType);
-  const factor = trunc(days / 3);//
+  const factor = trunc(days / 3);
   const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier));
   const infectionsByRequestedTime = trunc((currentlyInfected * powerOfTwo(factor)));
 
@@ -53,7 +54,6 @@ const estimator = (data, mutiplier) => {
   const casesForICUByRequestedTime = trunc(infectionsByRequestedTime * needICU);
   const cFVBRT = trunc(infectionsByRequestedTime * needVentilator);
   const dollarsInFlight = trunc((infectionsByRequestedTime * earnByPeople * USDEarn) / days);
-
 
   return {
     currentlyInfected,
@@ -65,7 +65,6 @@ const estimator = (data, mutiplier) => {
     dollarsInFlight
   };
 };
-
 
 const covid19ImpactEstimator = (data) => {
   const impact = estimator(data, 10);
