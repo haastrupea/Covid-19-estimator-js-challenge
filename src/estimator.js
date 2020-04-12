@@ -37,8 +37,8 @@ const estimator = (data, mutiplier) => {
     periodType, timeToElapse, reportedCases, totalHospitalBeds
   } = data;
   const normalise = normaliseDuration(Number(timeToElapse), periodType);
-  const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier));
-  const infectionsByRequestedTime = trunc(currentlyInfected * normalise * 2);
+  const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier) * 2);
+  const infectionsByRequestedTime = trunc(currentlyInfected * normalise);
   const severeCasesByRequestedTime = trunc(infectionsByRequestedTime * needToRecover);
   const hBBRT = trunc((Number(totalHospitalBeds) * bed) - severeCasesByRequestedTime);
   const casesForICUByRequestedTime = trunc(infectionsByRequestedTime * needICU);
