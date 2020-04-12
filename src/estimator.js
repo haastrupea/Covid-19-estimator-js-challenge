@@ -1,6 +1,6 @@
 // wrapper function for Math.trunc
 const trunc = (number) => Math.trunc(number);
-
+const powerOfTwo = (number) => trunc(2 ** number);
 const normaliseDuration = (timeToElapse, periodType) => {
   const timeToElapsed = Number(timeToElapse);
   let period = Number(timeToElapse);
@@ -37,8 +37,8 @@ const estimator = (data, mutiplier) => {
     periodType, timeToElapse, reportedCases, totalHospitalBeds
   } = data;
   const normalise = normaliseDuration(Number(timeToElapse), periodType);
-  const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier) * 2);
-  const infectionsByRequestedTime = trunc(currentlyInfected * normalise);
+  const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier));
+  const infectionsByRequestedTime = trunc((currentlyInfected * powerOfTwo(normalise)));
   const severeCasesByRequestedTime = trunc(infectionsByRequestedTime * needToRecover);
   const hBBRT = trunc((Number(totalHospitalBeds) * bed) - severeCasesByRequestedTime);
   const casesForICUByRequestedTime = trunc(infectionsByRequestedTime * needICU);
