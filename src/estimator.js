@@ -38,7 +38,7 @@ const estimator = (data, mutiplier) => {
   } = data;
   // normalise days,weeks, months and even years into days
   const days = normaliseDuration(timeToElapse, periodType);
-  const factor = days / 3;//
+  const factor = trunc(days / 3);//
   const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier));
   const infectionsByRequestedTime = trunc((currentlyInfected * powerOfTwo(factor)));
 
