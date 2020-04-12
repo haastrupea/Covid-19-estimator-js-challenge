@@ -36,13 +36,14 @@ const estimator = (data, mutiplier) => {
   const {
     periodType, timeToElapse, reportedCases, totalHospitalBeds
   } = data;
+  // normalise days,weeks, months and even years into days
   const normalise = normaliseDuration(Number(timeToElapse), periodType);
   const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier));
   const infectionsByRequestedTime = trunc((currentlyInfected * powerOfTwo(normalise)));
   const severeCasesByRequestedTime = trunc(infectionsByRequestedTime * needToRecover);
   const hBBRT = trunc((Number(totalHospitalBeds) * bed) - severeCasesByRequestedTime);
   const casesForICUByRequestedTime = trunc(infectionsByRequestedTime * needICU);
-  const casesForVentilatorsByRequestedTime = trunc(infectionsByRequestedTime * needVentilator);
+  const cFVBRT = trunc((infectionsByRequestedTime * needVentilator) / normalise);
   const dollarsInFlight = trunc((infectionsByRequestedTime * earnByPeople * USDEarn) * normalise);
 
 
@@ -52,7 +53,7 @@ const estimator = (data, mutiplier) => {
     severeCasesByRequestedTime,
     hospitalBedsByRequestedTime: hBBRT,
     casesForICUByRequestedTime,
-    casesForVentilatorsByRequestedTime,
+    casesForVentilatorsByRequestedTime: cFVBRT,
     dollarsInFlight
   };
 };
