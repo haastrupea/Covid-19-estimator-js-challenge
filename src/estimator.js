@@ -1,6 +1,6 @@
-const normaliseDuration= (timeToElapse,periodType) =>{
-    let period=Number(timeToElapse);
-    
+const normaliseDuration = (timeToElapse,periodType) => {
+    let period = Number(timeToElapse);
+
     switch (periodType.toLowerCase) {
         case "days":
             period=(period/3);
@@ -21,29 +21,29 @@ const normaliseDuration= (timeToElapse,periodType) =>{
 
 
 //estimator
-const estimator= (data,mutiplier)=>{
+const estimator = (data,mutiplier) => {
     //constant values
-    const PercentNeedICU=.05;//This is the estimated percentage of severe positive cases that will require ICU care
+    const PercentNeedICU = .05;//This is the estimated percentage of severe positive cases that will require ICU care
     const PercentNeedHospitalToRecover = .15 //estimated percentage of severe positive cases that will require hospitalization to recover
-    const PercentbedAvailable= .35 // percentage bed availability in hospitals for severe COVID-19 positive patients.
-    const PercentNeedVentilator= .02 // estimated percentage of severe positive cases that will require ventilators
-    const PercentUSDEarnByPeopleInRegion=.65 //of the region (the majority) earn $1.5 a day
-    const USDEarnPerDay= 1.5 //65% the region (the majority) earn $1.5 a day 
+    const PercentbedAvailable = .35 // percentage bed availability in hospitals for severe COVID-19 positive patients.
+    const PercentNeedVentilator = .02 // estimated percentage of severe positive cases that will require ventilators
+    const PercentUSDEarnByPeopleInRegion= .65 //of the region (the majority) earn $1.5 a day
+    const USDEarnPerDay = 1.5 //65% the region (the majority) earn $1.5 a day
     //data needed
     const timeToElapse = Number(data.timeToElapse);
     const periodType = data.periodType;
-    const normaliseInfectionDuration=normaliseDuration(timeToElapse,periodType);
+    const normaliseInfectionDuration = normaliseDuration(timeToElapse,periodType);
 
-    const currentlyInfected= Math.trunc(Number(data.reportedCases) * Number(mutiplier));
+    const currentlyInfected = Math.trunc(Number(data.reportedCases) * Number(mutiplier));
     const infectionsByRequestedTime = Math.trunc(currentlyInfected * normaliseInfectionDuration * 2);
     const severeCasesByRequestedTime = Math.trunc(infectionsByRequestedTime * PercentNeedHospitalToRecover);
     const hospitalBedsByRequestedTime = Math.trunc((Number(data.totalHospitalBeds)* PercentbedAvailable ) - severeCasesByRequestedTime);
     const casesForICUByRequestedTime = Math.trunc(infectionsByRequestedTime * PercentNeedICU);
     const casesForVentilatorsByRequestedTime = Math.trunc(infectionsByRequestedTime * PercentNeedVentilator);
     const dollarsInFlight = Math.trunc((infectionsByRequestedTime * PercentUSDEarnByPeopleInRegion * USDEarnPerDay) * normaliseInfectionDuration);
-    
-    
-    
+
+
+
     return {
         currentlyInfected,
         infectionsByRequestedTime,
@@ -57,9 +57,9 @@ const estimator= (data,mutiplier)=>{
 
 
 const covid19ImpactEstimator = (data) => {
- 
-    const impact= estimator(data,10);
-    const severeImpact= estimator(data,50);
+
+    const impact = estimator(data,10);
+    const severeImpact = estimator(data,50);
 
     return {data,impact,severeImpact};
 };
