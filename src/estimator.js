@@ -2,20 +2,21 @@
 const trunc = (number) => Math.trunc(number);
 
 const normaliseDuration = (timeToElapse, periodType) => {
+  const timeToElapsed = Number(timeToElapse);
   let period = Number(timeToElapse);
 
-  switch (periodType.toLowerCase) {
+  switch (periodType.toLowerCase()) {
     case 'days':
-      period /= 3;
+      period = timeToElapsed / 3;
       break;
     case 'weeks':
-      period = (period / 3) * 7;
+      period = (timeToElapsed / 3) * 7;
       break;
     case 'months':
-      period = (period / 3) * 30;
+      period = (timeToElapsed / 3) * 30;
       break;
     case 'years':
-      period = (period / 3) * 366;
+      period = (timeToElapsed / 3) * 366;
       break;
     default:
   }
