@@ -43,7 +43,7 @@ const estimator = (data, mutiplier) => {
   const severeCasesByRequestedTime = trunc(infectionsByRequestedTime * needToRecover);
   const hBBRT = trunc((Number(totalHospitalBeds) * bed) - severeCasesByRequestedTime);
   const casesForICUByRequestedTime = trunc(infectionsByRequestedTime * needICU);
-  const cFVBRT = trunc((infectionsByRequestedTime * needVentilator) / normalise);
+  const cFVBRT = trunc((infectionsByRequestedTime * needVentilator * USDEarn) / normalise);
   const dollarsInFlight = trunc((infectionsByRequestedTime * earnByPeople * USDEarn) * normalise);
 
 
