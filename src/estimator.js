@@ -7,16 +7,16 @@ const normaliseDuration = (timeToElapse, periodType) => {
 
   switch (periodType.toLowerCase()) {
     case 'days':
-      period = timeToElapsed / 3;
+      period = timeToElapsed;
       break;
     case 'weeks':
-      period = (timeToElapsed / 3) * 7;
+      period = timeToElapsed * 7;
       break;
     case 'months':
-      period = (timeToElapsed / 3) * 30;
+      period = timeToElapsed * 30;
       break;
     case 'years':
-      period = (timeToElapsed / 3) * 366;
+      period = timeToElapsed * 366;
       break;
     default:
   }
@@ -37,14 +37,17 @@ const estimator = (data, mutiplier) => {
     periodType, timeToElapse, reportedCases, totalHospitalBeds
   } = data;
   // normalise days,weeks, months and even years into days
-  const normalise = normaliseDuration(Number(timeToElapse), periodType);
+  const days = normaliseDuration(timeToElapse, periodType);
+  const factor = days / 3;//
   const currentlyInfected = trunc(Number(reportedCases) * Number(mutiplier));
-  const infectionsByRequestedTime = trunc((currentlyInfected * powerOfTwo(normalise)));
+  const infectionsByRequestedTime = trunc((currentlyInfected * powerOfTwo(factor)));
+
   const severeCasesByRequestedTime = trunc(infectionsByRequestedTime * needToRecover);
   const hBBRT = trunc((Number(totalHospitalBeds) * bed) - severeCasesByRequestedTime);
+
   const casesForICUByRequestedTime = trunc(infectionsByRequestedTime * needICU);
   const cFVBRT = trunc(infectionsByRequestedTime * needVentilator);
-  const dollarsInFlight = trunc((infectionsByRequestedTime * earnByPeople * USDEarn) / normalise);
+  const dollarsInFlight = trunc((infectionsByRequestedTime * earnByPeople * USDEarn) / days);
 
 
   return {
