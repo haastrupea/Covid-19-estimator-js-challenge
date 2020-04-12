@@ -30,12 +30,17 @@ const estimator = (data, mutiplier) => {
   const needToRecover = 0.15; // estimated % of severe +ve cases that need hospital to recover
   const bed = 0.35; // % bed available in hospitals for severe COVID-19 positive patients.
   const needVentilator = 0.02; // estimated % of severe positive cases that will require ventilators
-  const earnByPeople = 0.65; // of the region (the majority) earn $1.5 a day
-  const USDEarn = 1.5; // 65% the region (the majority) earn $1.5 a day
   // data needed
   const {
-    periodType, timeToElapse, reportedCases, totalHospitalBeds
+    periodType,
+    timeToElapse,
+    reportedCases,
+    totalHospitalBeds,
+    region: { avgDailyIncomeInUSD, avgDailyIncomePopulation }
   } = data;
+
+  const earnByPeople = avgDailyIncomePopulation; // of the region (the majority) earn $1.5 a day
+  const USDEarn = avgDailyIncomeInUSD; // 65% the region (the majority) earn $1.5 a day
   // normalise days,weeks, months and even years into days
   const days = normaliseDuration(timeToElapse, periodType);
   const factor = trunc(days / 3);//
