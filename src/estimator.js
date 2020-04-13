@@ -24,6 +24,7 @@ const normaliseDuration = (timeToElapse, periodType) => {
   return trunc(period);
 };
 
+
 const estimator = (data, mutiplier) => {
   // constant values
   const needICU = 0.05;// estimated % of severe +ve cases that will require ICU care
