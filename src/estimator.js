@@ -31,6 +31,7 @@ const estimator = (data, mutiplier) => {
   const bed = 0.35; // % bed available in hospitals for severe COVID-19 positive patients.
   const needVentilator = 0.02; // estimated % of severe positive cases that will require ventilators
 
+  
   const {
     periodType,
     timeToElapse,
